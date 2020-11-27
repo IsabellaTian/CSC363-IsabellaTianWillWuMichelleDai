@@ -12,6 +12,7 @@ var far = 10.0;
 var fovy = 40.0;
 var aspect;
 
+var theta;
 var modelViewMatrix, projectionMatrix;
 
 var eye = vec3(0.0, 0.0, 3.0);  // eye position
