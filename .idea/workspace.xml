@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="2fa74484-779a-4738-addb-4db305756c32" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,5 +57,18 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="439" y="313" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1606493387990">
+      <screen x="0" y="23" width="1280" height="730" />
+    </state>
+    <state x="439" y="313" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1280.730@0.23.1280.730" timestamp="1606493387990" />
+    <state x="339" y="147" width="604" height="490" key="find.popup" timestamp="1606493595373">
+      <screen x="0" y="23" width="1280" height="730" />
+    </state>
+    <state x="339" y="147" width="604" height="490" key="find.popup/0.23.1280.730@0.23.1280.730" timestamp="1606493595373" />
   </component>
 </project>
