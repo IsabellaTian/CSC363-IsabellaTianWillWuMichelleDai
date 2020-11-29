@@ -19,9 +19,9 @@ var eye = vec3(0.0, 0.0, 3.0);  // eye position
 const at = vec3(0.0, 0.0, 0.0);  //  direction of view
 const up = vec3(0.0, 1.0, 0.0);  // up direction
 
-function sphere()
+function sphere(div)
 {
-    var SPHERE_DIV = 12;
+    var SPHERE_DIV = div;
     var i, ai, si, ci;
     var j, aj, sj, cj;
     var p1, p2;
@@ -39,6 +39,14 @@ function sphere()
             positionsArray.push(si * sj);  // X
             positionsArray.push(cj);       // Y
             positionsArray.push(ci * sj);  // Z
+
+            var t1 = subtract(cj, si * sj);
+            var t2 = subtract(ci * sj, si * sj);
+            var normal = vec4(normalize(cross(t1,t2)));
+
+            normalsArray.push(normal);
+            normalsArray.push(normal);
+            normalsArray.push(normal);
         }
     }
     for (j = 0; j < SPHERE_DIV; j++) {
@@ -88,6 +96,8 @@ window.onload = function init()
 
     var program = initShaders( webgl, "vertex-shader", "fragment-shader" );
     webgl.useProgram( program );
+
+    sphere(12);
 
     var cBuffer = webgl.createBuffer();
     webgl.bindBuffer( webgl.ARRAY_BUFFER, cBuffer );
