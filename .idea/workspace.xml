@@ -19,7 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fa74484-779a-4738-addb-4db305756c32" name="Default Changelist" comment="">
+    <list default="true" id="2fa74484-779a-4738-addb-4db305756c32" name="Default Changelist" comment="First Commit MMD">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.html" beforeDir="false" afterPath="$PROJECT_DIR$/Project.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.js" beforeDir="false" afterPath="$PROJECT_DIR$/Project.js" afterDir="false" />
@@ -77,8 +77,16 @@
       <workItem from="1605194046540" duration="378000" />
       <workItem from="1606491282265" duration="75000" />
       <workItem from="1606633200139" duration="31000" />
-      <workItem from="1606683828513" duration="731000" />
+      <workItem from="1606683828513" duration="1421000" />
     </task>
+    <task id="LOCAL-00001" summary="First Commit MMD">
+      <created>1606684621078</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1606684621078</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -95,5 +103,19 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="First Commit MMD" />
+    <option name="LAST_COMMIT_MESSAGE" value="First Commit MMD" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="421" y="95" key="FileChooserDialogImpl" timestamp="1606684634736">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="421" y="95" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1606684634736" />
+    <state x="233" y="73" key="Vcs.Push.Dialog.v2" timestamp="1606684624544">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="233" y="73" key="Vcs.Push.Dialog.v2/0.0.1280.680@0.0.1280.680" timestamp="1606684624544" />
   </component>
 </project>

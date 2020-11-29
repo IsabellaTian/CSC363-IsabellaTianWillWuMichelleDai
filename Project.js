@@ -7,13 +7,30 @@ var normalsArray = [];
 var colorsArray = [];
 var indicesArray = [];
 
+var theta = 0;
+var thetaLoc;
+var deltatheta = 0.01;
+var deltaeyedistance = 0.0;
+var distance = 0.0;
+var deltadistance = 0.0;
+var distanceLoc;
+
+// variables underneath are the ones to change the location of the specular light
+var dspecularXLoc;
+var dspecularYLoc;
+var dspecularZLoc;
+
+var deltaSpecularX = 0.0;
+var deltaSpecularY = 0.0;
+var deltaSpecularZ = 0.0;
+
 var near = 3.0;
 var far = 10.0;
 var fovy = 40.0;
 var aspect;
 
-var theta;
 var modelViewMatrix, projectionMatrix;
+var modelViewMatrixLoc, projectionMatrixLoc;
 
 var eye = vec3(0.0, 0.0, 3.0);  // eye position
 const at = vec3(0.0, 0.0, 0.0);  //  direction of view
@@ -72,7 +89,7 @@ function sphere(div)
             colorsArray.push(_this.colorsArray[0]);
             colorsArray.push(_this.colorsArray[1]);
             colorsArray.push(_this.colorsArray[2]);
-            colorsArray.push(_this.colorsArray[3]);
+            //colorsArray.push(_this.colorsArray[3]);
         }
     }
 }
@@ -80,6 +97,29 @@ function sphere(div)
 
 window.onload = function init()
 {
+    document.getElementById("deltaeyedistance").onchange = function(event){
+        deltaeyedistance = parseFloat(event.target.value);
+        eye = vec3(0.0, 0.0, deltaeyedistance);
+    }
+    document.getElementById("deltatheta").onchange = function(event){
+        deltatheta = parseFloat(event.target.value);
+    }
+    document.getElementById("deltadistance").onchange = function(event){
+        deltadistance = parseFloat(event.target.value);
+    }
+
+    document.getElementById("deltaSpecularX").onchange = function(event){
+        deltaSpecularX = parseFloat(event.target.value);
+    }
+
+    document.getElementById("deltaSpecularY").onchange = function(event){
+        deltaSpecularY = parseFloat(event.target.value);
+    }
+
+    document.getElementById("deltaSpecularZ").onchange = function(event){
+        deltaSpecularZ = parseFloat(event.target.value);
+    }
+
     canvas = document.getElementById( "gl-canvas" );
 
     webgl = WebGLUtils.setupWebGL( canvas );
@@ -94,10 +134,19 @@ window.onload = function init()
     // enable hidden surface removal (by default uses LESS)
     webgl.enable(webgl.DEPTH_TEST);
 
+
+    sphere(12);
+
     var program = initShaders( webgl, "vertex-shader", "fragment-shader" );
     webgl.useProgram( program );
 
-    sphere(12);
+    thetaLoc = webgl.getUniformLocation(program,"theta");
+    distanceLoc = webgl.getUniformLocation(program, "distance");
+    projectionMatrixLoc = webgl.getUniformLocation(program,"projectionMatrix");
+    modelViewMatrixLoc = webgl.getUniformLocation(program,"modelViewMatrix");
+    dspecularXLoc = webgl.getUniformLocation(program, "deltaSpecularX");
+    dspecularYLoc = webgl.getUniformLocation(program, "deltaSpecularY");
+    dspecularZLoc = webgl.getUniformLocation(program, "deltaSpecularZ");
 
     var cBuffer = webgl.createBuffer();
     webgl.bindBuffer( webgl.ARRAY_BUFFER, cBuffer );
@@ -141,6 +190,10 @@ function render()
 
     theta = IncrementClamp(theta,deltatheta, 2.0*Math.PI);
     webgl.uniform1f(thetaLoc,theta);
+    webgl.uniform1f(distanceLoc,distance+deltadistance);
+    webgl.uniform1f(dspecularXLoc, deltaSpecularX);
+    webgl.uniform1f(dspecularYLoc, deltaSpecularY);
+    webgl.uniform1f(dspecularZLoc, deltaSpecularZ);
 
     modelViewMatrix =  lookAt(eye,at,up);
     projectionMatrix = perspective(fovy, aspect, near, far);
