@@ -19,7 +19,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fa74484-779a-4738-addb-4db305756c32" name="Default Changelist" comment="First Commit MMD">
+    <list default="true" id="2fa74484-779a-4738-addb-4db305756c32" name="Default Changelist" comment="Second Commit MMD">
+      <change afterPath="$PROJECT_DIR$/EarthPic.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.html" beforeDir="false" afterPath="$PROJECT_DIR$/Project.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.js" beforeDir="false" afterPath="$PROJECT_DIR$/Project.js" afterDir="false" />
@@ -41,15 +42,20 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1kCA8mILNGM5Liq3jLHRsvrzHER" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../graphicslab4-daimm18/Driver.js" />
+    <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="configurable.group.language" />
@@ -77,7 +83,8 @@
       <workItem from="1605194046540" duration="378000" />
       <workItem from="1606491282265" duration="75000" />
       <workItem from="1606633200139" duration="31000" />
-      <workItem from="1606683828513" duration="1421000" />
+      <workItem from="1606683828513" duration="5356000" />
+      <workItem from="1606749868840" duration="13335000" />
     </task>
     <task id="LOCAL-00001" summary="First Commit MMD">
       <created>1606684621078</created>
@@ -86,7 +93,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606684621078</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Second Commit MMD">
+      <created>1606685272000</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1606685272000</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -105,17 +119,31 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="First Commit MMD" />
-    <option name="LAST_COMMIT_MESSAGE" value="First Commit MMD" />
+    <MESSAGE value="Second Commit MMD" />
+    <option name="LAST_COMMIT_MESSAGE" value="Second Commit MMD" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="421" y="95" key="FileChooserDialogImpl" timestamp="1606684634736">
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606750611795">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="421" y="95" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1606684634736" />
-    <state x="233" y="73" key="Vcs.Push.Dialog.v2" timestamp="1606684624544">
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1606750611795" />
+    <state x="421" y="95" key="FileChooserDialogImpl" timestamp="1606709899638">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="233" y="73" key="Vcs.Push.Dialog.v2/0.0.1280.680@0.0.1280.680" timestamp="1606684624544" />
+    <state x="421" y="95" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1606709899638" />
+    <state x="233" y="73" key="Vcs.Push.Dialog.v2" timestamp="1606685275205">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="233" y="73" key="Vcs.Push.Dialog.v2/0.0.1280.680@0.0.1280.680" timestamp="1606685275205" />
+    <state x="359" y="150" key="jetbrains.nodejs.interpreters-dialog" timestamp="1606750610523">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="359" y="150" key="jetbrains.nodejs.interpreters-dialog/0.0.1280.680@0.0.1280.680" timestamp="1606750610523" />
+    <state x="303" y="2" width="672" height="678" key="search.everywhere.popup" timestamp="1606770582217">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="303" y="2" width="672" height="678" key="search.everywhere.popup/0.0.1280.680@0.0.1280.680" timestamp="1606770582217" />
   </component>
 </project>

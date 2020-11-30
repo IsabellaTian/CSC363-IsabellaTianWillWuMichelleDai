@@ -1,12 +1,10 @@
 "use strict";
+
 var canvas;
 var webgl;
 
-var positionsArray = [];
-var normalsArray = [];
-var colorsArray = [];
-var indicesArray = [];
-
+// variables to enable CPU manipulation of GPU uniform "theta" and "distance(orbit distance)" as well as the
+// "deltaeyedistance(distance from the eye)"
 var theta = 0;
 var thetaLoc;
 var deltatheta = 0.01;
@@ -14,6 +12,16 @@ var deltaeyedistance = 0.0;
 var distance = 0.0;
 var deltadistance = 0.0;
 var distanceLoc;
+
+var va = vec4(0.0, 0.0, -1.0,1);
+var vb = vec4(0.0, 0.942809, 0.333333, 1);
+var vc = vec4(-0.816497, -0.471405, 0.333333, 1);
+var vd = vec4(0.816497, -0.471405, 0.333333,1);
+
+
+var numTimesToSubdivide = 4;
+
+var index = 0;
 
 // variables underneath are the ones to change the location of the specular light
 var dspecularXLoc;
@@ -24,77 +32,27 @@ var deltaSpecularX = 0.0;
 var deltaSpecularY = 0.0;
 var deltaSpecularZ = 0.0;
 
+var positionsArray = [];
+var normalsArray = [];
+var colorsArray = [];
+
+// frustum information
 var near = 3.0;
 var far = 10.0;
-var fovy = 40.0;
-var aspect;
+var fovy = 40.0;  // Field-of-view in Y direction angle (in degrees)
+var aspect; // Viewport aspect ratio (setup once canvas is known)
 
+
+// uniform matrices for modelview and projection
 var modelViewMatrix, projectionMatrix;
 var modelViewMatrixLoc, projectionMatrixLoc;
 
-var eye = vec3(0.0, 0.0, 3.0);  // eye position
+// eye information
+var eye = vec3(0.0, 0.0, 6.0);  // eye position
 const at = vec3(0.0, 0.0, 0.0);  //  direction of view
 const up = vec3(0.0, 1.0, 0.0);  // up direction
 
-function sphere(div)
-{
-    var SPHERE_DIV = div;
-    var i, ai, si, ci;
-    var j, aj, sj, cj;
-    var p1, p2;
-
-    // Vertices
-    for (j = 0; j <= SPHERE_DIV; j++) {
-        aj = j * Math.PI / SPHERE_DIV;
-        sj = Math.sin(aj);
-        cj = Math.cos(aj);
-        for (i = 0; i <= SPHERE_DIV; i++) {
-            ai = i * 2 * Math.PI / SPHERE_DIV;
-            si = Math.sin(ai);
-            ci = Math.cos(ai);
-
-            positionsArray.push(si * sj);  // X
-            positionsArray.push(cj);       // Y
-            positionsArray.push(ci * sj);  // Z
-
-            var t1 = subtract(cj, si * sj);
-            var t2 = subtract(ci * sj, si * sj);
-            var normal = vec4(normalize(cross(t1,t2)));
-
-            normalsArray.push(normal);
-            normalsArray.push(normal);
-            normalsArray.push(normal);
-        }
-    }
-    for (j = 0; j < SPHERE_DIV; j++) {
-        for (i = 0; i < SPHERE_DIV; i++) {
-            p1 = j * (SPHERE_DIV+1) + i;
-            p2 = p1 + (SPHERE_DIV+1);
-
-            indicesArray.push(p1);
-            indicesArray.push(p2);
-            indicesArray.push(p1 + 1);
-
-            indicesArray.push(p1 + 1);
-            indicesArray.push(p2);
-            indicesArray.push(p2 + 1);
-        }
-    }
-    _this.indicesArray = new Uint8Array(indicesArray);
-
-
-    _this.colorsArray = _this.colorsArray.map(function(n) { return n/255; });
-    for (j = 0; j <= SPHERE_DIV; j++) {
-        for (i = 0; i <= SPHERE_DIV; i++) {
-            colorsArray.push(_this.colorsArray[0]);
-            colorsArray.push(_this.colorsArray[1]);
-            colorsArray.push(_this.colorsArray[2]);
-            //colorsArray.push(_this.colorsArray[3]);
-        }
-    }
-}
-
-
+// define and register callback function to start things off once the html data loads
 window.onload = function init()
 {
     document.getElementById("deltaeyedistance").onchange = function(event){
@@ -134,12 +92,17 @@ window.onload = function init()
     // enable hidden surface removal (by default uses LESS)
     webgl.enable(webgl.DEPTH_TEST);
 
+    // creating triangles
+    tetrahedron(va, vb, vc, vd, numTimesToSubdivide);
 
-    sphere(12);
-
+    //
+    //  Load shaders and initialize attribute buffers
+    //  Set webgl context to "program"
+    //
     var program = initShaders( webgl, "vertex-shader", "fragment-shader" );
     webgl.useProgram( program );
 
+    // get GPU location of uniforms in <program>
     thetaLoc = webgl.getUniformLocation(program,"theta");
     distanceLoc = webgl.getUniformLocation(program, "distance");
     projectionMatrixLoc = webgl.getUniformLocation(program,"projectionMatrix");
@@ -147,6 +110,19 @@ window.onload = function init()
     dspecularXLoc = webgl.getUniformLocation(program, "deltaSpecularX");
     dspecularYLoc = webgl.getUniformLocation(program, "deltaSpecularY");
     dspecularZLoc = webgl.getUniformLocation(program, "deltaSpecularZ");
+
+    // attribute buffers
+
+    // element array buffer (indices for vertices and colors)
+    //     each is an 8-bit unsigned integer (0, 1, ..., 255)
+    //     each is an index for the attributes
+    //var iBuffer = webgl.createBuffer();
+    //webgl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, iBuffer);
+    //webgl.bufferData(webgl.ELEMENT_ARRAY_BUFFER,
+    //    new Uint8Array(attrIndices), webgl.STATIC_DRAW);
+
+    // color array attribute buffer  (indexed by iBuffer)
+    //     4 floats, corresponding to rgba
 
     var cBuffer = webgl.createBuffer();
     webgl.bindBuffer( webgl.ARRAY_BUFFER, cBuffer );
@@ -172,6 +148,7 @@ window.onload = function init()
 
     var nBuffer = webgl.createBuffer();
     webgl.bindBuffer( webgl.ARRAY_BUFFER, nBuffer );
+    //webgl.bufferData( webgl.ARRAY_BUFFER, flatten(vertexPositions), webgl.STATIC_DRAW );
     webgl.bufferData( webgl.ARRAY_BUFFER, flatten(normalsArray), webgl.STATIC_DRAW );
 
     var vNormalLOC = webgl.getAttribLocation( program, "vNormal" );
@@ -183,11 +160,17 @@ window.onload = function init()
     render();
 };
 
+// **************
+
+// recursive render function -- recursive call is synchronized
+// with the screen refresh
 function render()
 {
     // clear the color buffer and the depth buffer
     webgl.clear( webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT);
 
+    // compute angle of rotation and pass along to vertex shader
+    // compute the distance from the orbiting axis to the object and pass along to vertex shader
     theta = IncrementClamp(theta,deltatheta, 2.0*Math.PI);
     webgl.uniform1f(thetaLoc,theta);
     webgl.uniform1f(distanceLoc,distance+deltadistance);
@@ -195,6 +178,8 @@ function render()
     webgl.uniform1f(dspecularYLoc, deltaSpecularY);
     webgl.uniform1f(dspecularZLoc, deltaSpecularZ);
 
+    // compute modelView and projection matrices
+    // and them pass along to vertex shader
     modelViewMatrix =  lookAt(eye,at,up);
     projectionMatrix = perspective(fovy, aspect, near, far);
     webgl.uniformMatrix4fv( modelViewMatrixLoc, false,
@@ -210,6 +195,57 @@ function render()
     requestAnimFrame( render );
 }
 
+function triangle(a, b, c) {
+    positionsArray.push(a);
+    positionsArray.push(b);
+    positionsArray.push(c);
+
+    // normals are vectors
+
+    normalsArray.push(a[0],a[1], a[2], 0.0);
+    normalsArray.push(b[0],b[1], b[2], 0.0);
+    normalsArray.push(c[0],c[1], c[2], 0.0);
+
+    colorsArray.push(vec4( 1.0, 0.5, 0.0, 1.0 ));
+    colorsArray.push(vec4( 1.0, 0.5, 0.0, 1.0 ));
+    colorsArray.push(vec4( 1.0, 0.5, 0.0, 1.0 ));
+
+
+    index += 3;
+
+}
+
+
+function divideTriangle(a, b, c, count) {
+    if ( count > 0 ) {
+
+        var ab = mix( a, b, 0.5);
+        var ac = mix( a, c, 0.5);
+        var bc = mix( b, c, 0.5);
+
+        ab = normalize(ab, true);
+        ac = normalize(ac, true);
+        bc = normalize(bc, true);
+
+        divideTriangle( a, ab, ac, count - 1 );
+        divideTriangle( ab, b, bc, count - 1 );
+        divideTriangle( bc, c, ac, count - 1 );
+        divideTriangle( ab, bc, ac, count - 1 );
+    }
+    else {
+        triangle( a, b, c );
+    }
+}
+
+
+function tetrahedron(a, b, c, d, n) {
+    divideTriangle(a, b, c, n);
+    divideTriangle(d, c, b, n);
+    divideTriangle(a, d, b, n);
+    divideTriangle(a, c, d, n);
+}
+
+// Utility function to increment a variable and clamp
 function IncrementClamp(x, dx, upper){
     var newX = x+dx;
     if (newX > upper){
