@@ -19,10 +19,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fa74484-779a-4738-addb-4db305756c32" name="Default Changelist" comment="Second Commit MMD">
-      <change afterPath="$PROJECT_DIR$/EarthPic.png" afterDir="false" />
+    <list default="true" id="2fa74484-779a-4738-addb-4db305756c32" name="Default Changelist" comment="Third Commit Michelle">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project.html" beforeDir="false" afterPath="$PROJECT_DIR$/Project.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.js" beforeDir="false" afterPath="$PROJECT_DIR$/Project.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -84,7 +82,7 @@
       <workItem from="1606491282265" duration="75000" />
       <workItem from="1606633200139" duration="31000" />
       <workItem from="1606683828513" duration="5356000" />
-      <workItem from="1606749868840" duration="13335000" />
+      <workItem from="1606749868840" duration="14067000" />
     </task>
     <task id="LOCAL-00001" summary="First Commit MMD">
       <created>1606684621078</created>
@@ -100,7 +98,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606685272000</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Third Commit Michelle">
+      <created>1606771771043</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1606771771043</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -122,7 +127,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="First Commit MMD" />
     <MESSAGE value="Second Commit MMD" />
-    <option name="LAST_COMMIT_MESSAGE" value="Second Commit MMD" />
+    <MESSAGE value="Third Commit Michelle" />
+    <option name="LAST_COMMIT_MESSAGE" value="Third Commit Michelle" />
   </component>
   <component name="WindowStateProjectService">
     <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606750611795">
@@ -133,10 +139,14 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="421" y="95" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1606709899638" />
-    <state x="233" y="73" key="Vcs.Push.Dialog.v2" timestamp="1606685275205">
+    <state x="233" y="73" key="Vcs.Push.Dialog.v2" timestamp="1606771774000">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="233" y="73" key="Vcs.Push.Dialog.v2/0.0.1280.680@0.0.1280.680" timestamp="1606685275205" />
+    <state x="233" y="73" key="Vcs.Push.Dialog.v2/0.0.1280.680@0.0.1280.680" timestamp="1606771774000" />
+    <state x="778" y="254" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1606772325983">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="778" y="254" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.680@0.0.1280.680" timestamp="1606772325983" />
     <state x="359" y="150" key="jetbrains.nodejs.interpreters-dialog" timestamp="1606750610523">
       <screen x="0" y="0" width="1280" height="680" />
     </state>

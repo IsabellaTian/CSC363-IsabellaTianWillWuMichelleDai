@@ -18,7 +18,6 @@ var vb = vec4(0.0, 0.942809, 0.333333, 1);
 var vc = vec4(-0.816497, -0.471405, 0.333333, 1);
 var vd = vec4(0.816497, -0.471405, 0.333333,1);
 
-
 var numTimesToSubdivide = 4;
 
 var index = 0;
@@ -48,7 +47,7 @@ var modelViewMatrix, projectionMatrix;
 var modelViewMatrixLoc, projectionMatrixLoc;
 
 // eye information
-var eye = vec3(0.0, 0.0, 6.0);  // eye position
+var eye = vec3(0.0, 0.0, 3.0);  // eye position
 const at = vec3(0.0, 0.0, 0.0);  //  direction of view
 const up = vec3(0.0, 1.0, 0.0);  // up direction
 
@@ -110,19 +109,6 @@ window.onload = function init()
     dspecularXLoc = webgl.getUniformLocation(program, "deltaSpecularX");
     dspecularYLoc = webgl.getUniformLocation(program, "deltaSpecularY");
     dspecularZLoc = webgl.getUniformLocation(program, "deltaSpecularZ");
-
-    // attribute buffers
-
-    // element array buffer (indices for vertices and colors)
-    //     each is an 8-bit unsigned integer (0, 1, ..., 255)
-    //     each is an index for the attributes
-    //var iBuffer = webgl.createBuffer();
-    //webgl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, iBuffer);
-    //webgl.bufferData(webgl.ELEMENT_ARRAY_BUFFER,
-    //    new Uint8Array(attrIndices), webgl.STATIC_DRAW);
-
-    // color array attribute buffer  (indexed by iBuffer)
-    //     4 floats, corresponding to rgba
 
     var cBuffer = webgl.createBuffer();
     webgl.bindBuffer( webgl.ARRAY_BUFFER, cBuffer );
