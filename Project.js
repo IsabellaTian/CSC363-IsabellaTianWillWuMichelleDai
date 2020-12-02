@@ -9,9 +9,6 @@ var theta = 0;
 var thetaLoc;
 var deltatheta = 0.01;
 var deltaeyedistance = 0.0;
-var distance = 0.0;
-var deltadistance = 0.0;
-var distanceLoc;
 
 
 var va = vec4(0.0, 0.0, -1.0,1);
@@ -60,9 +57,6 @@ window.onload = function init()
     document.getElementById("deltatheta").onchange = function(event){
         deltatheta = parseFloat(event.target.value);
     }
-    document.getElementById("deltadistance").onchange = function(event){
-        deltadistance = parseFloat(event.target.value);
-    }
 
     canvas = document.getElementById( "gl-canvas" );
 
@@ -91,7 +85,6 @@ window.onload = function init()
 
     // get GPU location of uniforms in <program>
     thetaLoc = webgl.getUniformLocation(program,"theta");
-    distanceLoc = webgl.getUniformLocation(program, "distance");
     projectionMatrixLoc = webgl.getUniformLocation(program,"projectionMatrix");
     modelViewMatrixLoc = webgl.getUniformLocation(program,"modelViewMatrix");
 
@@ -154,7 +147,6 @@ function render()
     // compute the distance from the orbiting axis to the object and pass along to vertex shader
     theta = IncrementClamp(theta,deltatheta, 2.0*Math.PI);
     webgl.uniform1f(thetaLoc,theta);
-    webgl.uniform1f(distanceLoc,distance+deltadistance);
 
     // compute modelView and projection matrices
     // and them pass along to vertex shader

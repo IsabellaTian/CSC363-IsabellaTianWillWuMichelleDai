@@ -26,10 +26,6 @@ HTML StartUp:  vertex shader <br>
     uniform float theta;
     uniform mat4 modelViewMatrix;
     uniform mat4 projectionMatrix;
-    uniform float distance;
-    uniform float deltaSpecularX;
-    uniform float deltaSpecularY;
-    uniform float deltaSpecularZ;
 
     // boring varying
     varying vec4 fColor;
@@ -193,12 +189,6 @@ HTML StartUp:  check for html5 <br>
 
 <label> Distance from eyes </label>
 <input type="range" id="deltaeyedistance" min="4.0" value="4.0" max="10.0" step="0.01"/>
-
-<br>
-<br>
-
-<label> Distance of orbit </label>
-<input type="range" id="deltadistance" min="0.0" value="1.0" max="3.0" step="0.01" />
 
 <br>
 <br>
