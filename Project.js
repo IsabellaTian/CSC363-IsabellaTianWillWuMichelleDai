@@ -47,12 +47,28 @@ var eye = vec3(0.0, 6.0, 6.0);  // eye position
 const at = vec3(0.0, 0.0, 0.0);  //  direction of view
 const up = vec3(0.0, 1.0, 0.0);  // up direction
 
+var vertexColors = [
+    vec4( 1.0, 1.0, 1.0, 1.0 ),
+    vec4( 1.0, 1.0, 1.0, 1.0 ),
+    vec4( 1.0, 1.0, 1.0, 1.0 )
+];
+
+var vertexPositions = [
+    vec4(0.2, 0.5, 7.0, 1.0),  // cat face
+    vec4(0.2, 0.4, 7.0, 1.0),
+    vec4(0.1, 0.3, 7.0, 1.0)
+];
+
+var attrIndices = [
+    0, 1, 2
+];
+
 // define and register callback function to start things off once the html data loads
 window.onload = function init()
 {
     document.getElementById("deltaeyedistance").onchange = function(event){
         deltaeyedistance = parseFloat(event.target.value);
-        eye = vec3(0.0, 0.0, deltaeyedistance);
+        eye = vec3(0.0, 6.0, deltaeyedistance);
     }
     document.getElementById("deltatheta").onchange = function(event){
         deltatheta = parseFloat(event.target.value);
@@ -75,6 +91,11 @@ window.onload = function init()
     // creating triangles
     tetrahedron(va, vb, vc, vd, numTimesToSubdivide, vec4(0.0, 0.0, 1.0, 1.0), 2.0);
     tetrahedron(va, vb, vc, vd, numTimesToSubdivide, vec4( 1.0, 0.5, 0.0, 1.0 ), 1.0);
+
+    for(var i = 0; i < attrIndices.length; i = i + 3)
+    {
+        myTriangle(attrIndices[i], attrIndices[i+1], attrIndices[i+2], 10.0);
+    }
 
     //
     //  Load shaders and initialize attribute buffers
@@ -163,6 +184,37 @@ function render()
     webgl.drawArrays(webgl.TRIANGLES, 0, positionsArray.length);
 
     requestAnimFrame( render );
+}
+
+function myTriangle(iA, iB, iC, type)
+{
+    var A = vertexPositions[iA];
+    var B = vertexPositions[iB];
+    var C = vertexPositions[iC];
+
+    var Ac = vertexColors[iA];
+    var Bc = vertexColors[iB];
+    var Cc = vertexColors[iC];
+
+    positionsArray.push(A);
+    positionsArray.push(B);
+    positionsArray.push(C);
+
+    colorsArray.push(Ac);
+    colorsArray.push(Bc);
+    colorsArray.push(Cc);
+
+    var t1 = subtract(B,A);
+    var t2 = subtract(C,A);
+    var normal = vec4(normalize(cross(t1,t2)));
+
+    normalsArray.push(normal);
+    normalsArray.push(normal);
+    normalsArray.push(normal);
+
+    typesArray.push(type);
+    typesArray.push(type);
+    typesArray.push(type);
 }
 
 function triangle(a, b, c, color, type) {

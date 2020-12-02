@@ -94,7 +94,7 @@ HTML StartUp:  vertex shader <br>
 
      gl_Position = projectionMatrix*MatrixAfterTransform*vPosition;
     }
-    else
+    else if (abs(vType-1.0) < 2.0)
     {
     // light1 is the light containing only specular, light2 is the light containing ambient and diffuse
         float shininess = 40.0;
@@ -152,6 +152,11 @@ HTML StartUp:  vertex shader <br>
 
      gl_Position = projectionMatrix*MatrixAfterTransform*vPosition;
     }
+    else
+    {
+    gl_Position = vPosition;
+          fColor = vColor;
+    }
    }
 </script>
 
@@ -188,7 +193,7 @@ HTML StartUp:  check for html5 <br>
 <br>
 
 <label> Distance from eyes </label>
-<input type="range" id="deltaeyedistance" min="4.0" value="4.0" max="10.0" step="0.01"/>
+<input type="range" id="deltaeyedistance" min="6.0" value="6.0" max="10.0" step="0.01"/>
 
 <br>
 <br>
