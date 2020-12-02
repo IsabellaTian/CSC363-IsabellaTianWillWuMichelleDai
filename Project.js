@@ -13,10 +13,20 @@ var distance = 0.0;
 var deltadistance = 0.0;
 var distanceLoc;
 
+
 var va = vec4(0.0, 0.0, -1.0,1);
 var vb = vec4(0.0, 0.942809, 0.333333, 1);
 var vc = vec4(-0.816497, -0.471405, 0.333333, 1);
 var vd = vec4(0.816497, -0.471405, 0.333333,1);
+
+
+
+
+var vm = vec4(0.0, 0.0, -0.5, 1);
+var vn = vec4(0.0, 0.942809/3, 0.333333/3, 1);
+var vl = vec4(-0.816497/3, -0.471405/3, 0.333333/3, 1);
+var vs = vec4(0.816497/3, -0.471405/3, 0.333333/3, 1);
+
 
 var numTimesToSubdivide = 4;
 
@@ -37,9 +47,9 @@ var colorsArray = [];
 var typesArray = [];
 
 // frustum information
-var near = 3.0;
-var far = 10.0;
-var fovy = 40.0;  // Field-of-view in Y direction angle (in degrees)
+var near = 4.0;
+var far = 40.0;
+var fovy = 60.0;  // Field-of-view in Y direction angle (in degrees)
 var aspect; // Viewport aspect ratio (setup once canvas is known)
 
 
@@ -50,7 +60,7 @@ var modelViewMatrixLoc, projectionMatrixLoc;
 // eye information
 var eye = vec3(0.0, 0.0, 3.0);  // eye position
 const at = vec3(0.0, 0.0, 0.0);  //  direction of view
-const up = vec3(0.0, 1.0, 0.0);  // up direction
+const up = vec3(0.0, -1.0, -1.0);  // up direction
 
 // define and register callback function to start things off once the html data loads
 window.onload = function init()
@@ -94,6 +104,7 @@ window.onload = function init()
 
     // creating triangles
     tetrahedron(va, vb, vc, vd, numTimesToSubdivide, 1.0);
+    tetrahedron(vm, vn, vl, vs, numTimesToSubdivide, 2.0);
 
     //
     //  Load shaders and initialize attribute buffers
@@ -219,10 +230,12 @@ function triangle(a, b, c, type) {
 function divideTriangle(a, b, c, count, type) {
     if ( count > 0 ) {
 
+        // take midpoint
         var ab = mix( a, b, 0.5);
         var ac = mix( a, c, 0.5);
         var bc = mix( b, c, 0.5);
 
+        // normalize
         ab = normalize(ab, true);
         ac = normalize(ac, true);
         bc = normalize(bc, true);
