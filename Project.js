@@ -19,9 +19,6 @@ var vb = vec4(0.0, 0.942809, 0.333333, 1);
 var vc = vec4(-0.816497, -0.471405, 0.333333, 1);
 var vd = vec4(0.816497, -0.471405, 0.333333,1);
 
-
-
-
 var vm = vec4(0.0, 0.0, -0.5, 1);
 var vn = vec4(0.0, 0.942809/3, 0.333333/3, 1);
 var vl = vec4(-0.816497/3, -0.471405/3, 0.333333/3, 1);
@@ -58,9 +55,9 @@ var modelViewMatrix, projectionMatrix;
 var modelViewMatrixLoc, projectionMatrixLoc;
 
 // eye information
-var eye = vec3(0.0, 0.0, 3.0);  // eye position
+var eye = vec3(0.0, 6.0, 6.0);  // eye position
 const at = vec3(0.0, 0.0, 0.0);  //  direction of view
-const up = vec3(0.0, -1.0, -1.0);  // up direction
+const up = vec3(0.0, 1.0, 0.0);  // up direction
 
 // define and register callback function to start things off once the html data loads
 window.onload = function init()
@@ -103,8 +100,8 @@ window.onload = function init()
     webgl.enable(webgl.DEPTH_TEST);
 
     // creating triangles
-    tetrahedron(va, vb, vc, vd, numTimesToSubdivide, 1.0);
-    tetrahedron(vm, vn, vl, vs, numTimesToSubdivide, 2.0);
+    tetrahedron(va, vb, vc, vd, numTimesToSubdivide, vec4(0.0, 0.0, 1.0, 1.0), 2.0);
+    tetrahedron(va, vb, vc, vd, numTimesToSubdivide, vec4( 1.0, 0.5, 0.0, 1.0 ), 1.0);
 
     //
     //  Load shaders and initialize attribute buffers
@@ -203,7 +200,7 @@ function render()
     requestAnimFrame( render );
 }
 
-function triangle(a, b, c, type) {
+function triangle(a, b, c, color, type) {
     positionsArray.push(a);
     positionsArray.push(b);
     positionsArray.push(c);
@@ -214,9 +211,9 @@ function triangle(a, b, c, type) {
     normalsArray.push(b[0],b[1], b[2], 0.0);
     normalsArray.push(c[0],c[1], c[2], 0.0);
 
-    colorsArray.push(vec4( 1.0, 0.5, 0.0, 1.0 ));
-    colorsArray.push(vec4( 1.0, 0.5, 0.0, 1.0 ));
-    colorsArray.push(vec4( 1.0, 0.5, 0.0, 1.0 ));
+    colorsArray.push(color);
+    colorsArray.push(color);
+    colorsArray.push(color);
 
     typesArray.push(type);
     typesArray.push(type);
@@ -227,7 +224,7 @@ function triangle(a, b, c, type) {
 }
 
 
-function divideTriangle(a, b, c, count, type) {
+function divideTriangle(a, b, c, count, color, type) {
     if ( count > 0 ) {
 
         // take midpoint
@@ -240,22 +237,22 @@ function divideTriangle(a, b, c, count, type) {
         ac = normalize(ac, true);
         bc = normalize(bc, true);
 
-        divideTriangle( a, ab, ac, count - 1, type);
-        divideTriangle( ab, b, bc, count - 1, type);
-        divideTriangle( bc, c, ac, count - 1, type);
-        divideTriangle( ab, bc, ac, count - 1, type);
+        divideTriangle( a, ab, ac, count - 1, color,  type);
+        divideTriangle( ab, b, bc, count - 1, color,  type);
+        divideTriangle( bc, c, ac, count - 1, color, type);
+        divideTriangle( ab, bc, ac, count - 1, color, type);
     }
     else {
-        triangle( a, b, c , type);
+        triangle( a, b, c , color, type);
     }
 }
 
 
-function tetrahedron(a, b, c, d, n, type) {
-    divideTriangle(a, b, c, n, type);
-    divideTriangle(d, c, b, n, type);
-    divideTriangle(a, d, b, n, type);
-    divideTriangle(a, c, d, n, type);
+function tetrahedron(a, b, c, d, n, color, type) {
+    divideTriangle(a, b, c, n, color, type);
+    divideTriangle(d, c, b, n, color, type);
+    divideTriangle(a, d, b, n, color, type);
+    divideTriangle(a, c, d, n, color, type);
 }
 
 // Utility function to increment a variable and clamp
