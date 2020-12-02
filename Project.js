@@ -29,15 +29,6 @@ var numTimesToSubdivide = 4;
 
 var index = 0;
 
-// variables underneath are the ones to change the location of the specular light
-var dspecularXLoc;
-var dspecularYLoc;
-var dspecularZLoc;
-
-var deltaSpecularX = 0.0;
-var deltaSpecularY = 0.0;
-var deltaSpecularZ = 0.0;
-
 var positionsArray = [];
 var normalsArray = [];
 var colorsArray = [];
@@ -73,18 +64,6 @@ window.onload = function init()
         deltadistance = parseFloat(event.target.value);
     }
 
-    document.getElementById("deltaSpecularX").onchange = function(event){
-        deltaSpecularX = parseFloat(event.target.value);
-    }
-
-    document.getElementById("deltaSpecularY").onchange = function(event){
-        deltaSpecularY = parseFloat(event.target.value);
-    }
-
-    document.getElementById("deltaSpecularZ").onchange = function(event){
-        deltaSpecularZ = parseFloat(event.target.value);
-    }
-
     canvas = document.getElementById( "gl-canvas" );
 
     webgl = WebGLUtils.setupWebGL( canvas );
@@ -115,9 +94,6 @@ window.onload = function init()
     distanceLoc = webgl.getUniformLocation(program, "distance");
     projectionMatrixLoc = webgl.getUniformLocation(program,"projectionMatrix");
     modelViewMatrixLoc = webgl.getUniformLocation(program,"modelViewMatrix");
-    dspecularXLoc = webgl.getUniformLocation(program, "deltaSpecularX");
-    dspecularYLoc = webgl.getUniformLocation(program, "deltaSpecularY");
-    dspecularZLoc = webgl.getUniformLocation(program, "deltaSpecularZ");
 
     var cBuffer = webgl.createBuffer();
     webgl.bindBuffer( webgl.ARRAY_BUFFER, cBuffer );
@@ -179,9 +155,6 @@ function render()
     theta = IncrementClamp(theta,deltatheta, 2.0*Math.PI);
     webgl.uniform1f(thetaLoc,theta);
     webgl.uniform1f(distanceLoc,distance+deltadistance);
-    webgl.uniform1f(dspecularXLoc, deltaSpecularX);
-    webgl.uniform1f(dspecularYLoc, deltaSpecularY);
-    webgl.uniform1f(dspecularZLoc, deltaSpecularZ);
 
     // compute modelView and projection matrices
     // and them pass along to vertex shader

@@ -19,7 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fa74484-779a-4738-addb-4db305756c32" name="Default Changelist" comment="Fourth Commit Michelle">
+    <list default="true" id="2fa74484-779a-4738-addb-4db305756c32" name="Default Changelist" comment="Fifth Commit Michelle">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.html" beforeDir="false" afterPath="$PROJECT_DIR$/Project.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.js" beforeDir="false" afterPath="$PROJECT_DIR$/Project.js" afterDir="false" />
@@ -73,13 +73,34 @@
       <updated>1605194044741</updated>
       <workItem from="1605194046540" duration="378000" />
     </task>
+    <task id="LOCAL-00001" summary="Fifth Commit Michelle">
+      <created>1606927443550</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1606927443550</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fifth Commit Michelle" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fifth Commit Michelle" />
   </component>
   <component name="WindowStateProjectService">
     <state width="757" height="210" key="GridCell.Tab.0.bottom" timestamp="1606918406250">
@@ -98,6 +119,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="757" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606918406249" />
+    <state x="233" y="73" key="Vcs.Push.Dialog.v2" timestamp="1606927447652">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="233" y="73" key="Vcs.Push.Dialog.v2/0.0.1280.680@0.0.1280.680" timestamp="1606927447652" />
     <state x="439" y="313" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1606493387990">
       <screen x="0" y="23" width="1280" height="730" />
     </state>
