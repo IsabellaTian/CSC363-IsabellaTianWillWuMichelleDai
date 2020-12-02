@@ -18,6 +18,7 @@ HTML StartUp:  vertex shader <br>
     attribute vec4 vPosition;
     attribute vec4 vNormal;
     attribute vec4 vColor;
+    attribute float vType;
 
     // uniforms for angle of rotation (theta), model view (modelViewMatrix),
     // and perspective projection (projectionMatrix), as well as the orbit (distance)
@@ -35,6 +36,8 @@ HTML StartUp:  vertex shader <br>
 
     void main()
     {
+     if(abs(vType-1.0) < 0.1)
+     {
     // light1 is the light containing only specular, light2 is the light containing ambient and diffuse
         float shininess = 40.0;
         vec3 light1 = vec3(deltaSpecularX, deltaSpecularY, deltaSpecularZ);
@@ -92,6 +95,10 @@ HTML StartUp:  vertex shader <br>
 
      gl_Position = projectionMatrix*MatrixAfterTransform*vPosition;
     }
+    else
+    {gl_Position = vPosition;
+     fColor = vColor;}
+   }
 </script>
 
 

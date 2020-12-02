@@ -34,6 +34,7 @@ var deltaSpecularZ = 0.0;
 var positionsArray = [];
 var normalsArray = [];
 var colorsArray = [];
+var typesArray = [];
 
 // frustum information
 var near = 3.0;
@@ -86,13 +87,13 @@ window.onload = function init()
     aspect = canvas.width / canvas.height;
 
     webgl.viewport( 0, 0, canvas.width, canvas.height );
-    webgl.clearColor( 1.0, 1.0, 1.0, 1.0 );
+    webgl.clearColor( 0.0, 0.0, 0.0, 1.0 );
 
     // enable hidden surface removal (by default uses LESS)
     webgl.enable(webgl.DEPTH_TEST);
 
     // creating triangles
-    tetrahedron(va, vb, vc, vd, numTimesToSubdivide);
+    tetrahedron(va, vb, vc, vd, numTimesToSubdivide, 1.0);
 
     //
     //  Load shaders and initialize attribute buffers
@@ -129,6 +130,16 @@ window.onload = function init()
     var vPositionLOC = webgl.getAttribLocation( program, "vPosition" );
     webgl.vertexAttribPointer( vPositionLOC, 4, webgl.FLOAT, false, 0, 0 );
     webgl.enableVertexAttribArray( vPositionLOC );
+
+    var tBuffer = webgl.createBuffer();
+    webgl.bindBuffer(webgl.ARRAY_BUFFER, tBuffer);
+    webgl.bufferData(webgl.ARRAY_BUFFER, flatten(typesArray), webgl.STATIC_DRAW);
+
+    // associate JavaScript vType with vertex shader attribute "vType"
+    var vType = webgl.getAttribLocation( program, "vType");
+    webgl.vertexAttribPointer(vType, 1, webgl.FLOAT, false, 0, 0);
+    webgl.enableVertexAttribArray(vType);
+
 
     // normals buffer
 
@@ -181,7 +192,7 @@ function render()
     requestAnimFrame( render );
 }
 
-function triangle(a, b, c) {
+function triangle(a, b, c, type) {
     positionsArray.push(a);
     positionsArray.push(b);
     positionsArray.push(c);
@@ -196,13 +207,16 @@ function triangle(a, b, c) {
     colorsArray.push(vec4( 1.0, 0.5, 0.0, 1.0 ));
     colorsArray.push(vec4( 1.0, 0.5, 0.0, 1.0 ));
 
+    typesArray.push(type);
+    typesArray.push(type);
+    typesArray.push(type);
 
     index += 3;
 
 }
 
 
-function divideTriangle(a, b, c, count) {
+function divideTriangle(a, b, c, count, type) {
     if ( count > 0 ) {
 
         var ab = mix( a, b, 0.5);
@@ -213,22 +227,22 @@ function divideTriangle(a, b, c, count) {
         ac = normalize(ac, true);
         bc = normalize(bc, true);
 
-        divideTriangle( a, ab, ac, count - 1 );
-        divideTriangle( ab, b, bc, count - 1 );
-        divideTriangle( bc, c, ac, count - 1 );
-        divideTriangle( ab, bc, ac, count - 1 );
+        divideTriangle( a, ab, ac, count - 1, type);
+        divideTriangle( ab, b, bc, count - 1, type);
+        divideTriangle( bc, c, ac, count - 1, type);
+        divideTriangle( ab, bc, ac, count - 1, type);
     }
     else {
-        triangle( a, b, c );
+        triangle( a, b, c , type);
     }
 }
 
 
-function tetrahedron(a, b, c, d, n) {
-    divideTriangle(a, b, c, n);
-    divideTriangle(d, c, b, n);
-    divideTriangle(a, d, b, n);
-    divideTriangle(a, c, d, n);
+function tetrahedron(a, b, c, d, n, type) {
+    divideTriangle(a, b, c, n, type);
+    divideTriangle(d, c, b, n, type);
+    divideTriangle(a, d, b, n, type);
+    divideTriangle(a, c, d, n, type);
 }
 
 // Utility function to increment a variable and clamp
