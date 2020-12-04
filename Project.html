@@ -36,7 +36,7 @@ HTML StartUp:  vertex shader <br>
      {
     // light1 is the light containing only specular, light2 is the light containing ambient and diffuse
         float shininess = 40.0;
-        vec3 light1 = vec3(0.0, 10.0, 10.0);
+        vec3 light1 = vec3(0.0, 10.0, 7.0);
 
         vec4 ambientComponent2 = vec4(0.8, 0.5, 0.5, 1.0);
         vec4 diffuseComponent2 = vec4(0.8, 0.8, 0.8, 1.0);
@@ -94,11 +94,12 @@ HTML StartUp:  vertex shader <br>
 
      gl_Position = projectionMatrix*MatrixAfterTransform*vPosition;
     }
-    else if (abs(vType-1.0) < 2.0)
+
+    else (abs(vType-1.0) < 2.0 )
     {
-    // light1 is the light containing only specular, light2 is the light containing ambient and diffuse
+     // light1 is the light containing only specular, light2 is the light containing ambient and diffuse
         float shininess = 40.0;
-        vec3 light1 = vec3(0.0, 4.0, 6.0);
+        vec3 light1 = vec3(0.0, 10.0, 7.0);
 
         vec4 ambientComponent2 = vec4(0.8, 0.5, 0.5, 1.0);
         vec4 diffuseComponent2 = vec4(0.8, 0.8, 0.8, 1.0);
@@ -110,7 +111,7 @@ HTML StartUp:  vertex shader <br>
                   mat4( cos(theta), 0.0, -sin(theta), 0.0,
                          0.0,        1.0, 0.0,        0.0,
                          sin(theta),0.0, cos(theta), 0.0,
-                         0.0,        0.0, 0.0,        1.0) *
+                        0.0,        0.0, 0.0,        1.0) *
                          // rotating on a farther orbit
                          mat4(1.0, 0.0, 0.0, 0.0,
                          0.0, 1.0, 0.0, 0.0,
@@ -134,8 +135,8 @@ HTML StartUp:  vertex shader <br>
        specular = vec4(0.0, 0.0, 0.0, 1.0);
      }
 
-     //fColor = specular*vColor;
-     //fColor.a = 1.0;
+     fColor = specular*vColor;
+     fColor.a = 1.0;
 
 
 
@@ -153,10 +154,8 @@ HTML StartUp:  vertex shader <br>
      gl_Position = projectionMatrix*MatrixAfterTransform*vPosition;
     }
     else
-    {
-    gl_Position = vPosition;
-          fColor = vColor;
-    }
+    {gl_Position = vPosition;
+     fColor = vColor;}
    }
 </script>
 

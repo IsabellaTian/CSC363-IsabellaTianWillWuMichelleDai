@@ -89,7 +89,9 @@ window.onload = function init()
     webgl.enable(webgl.DEPTH_TEST);
 
     // creating triangles
+    //earth
     tetrahedron(va, vb, vc, vd, numTimesToSubdivide, vec4(0.0, 0.0, 1.0, 1.0), 2.0);
+    //sun
     tetrahedron(va, vb, vc, vd, numTimesToSubdivide, vec4( 1.0, 0.5, 0.0, 1.0 ), 1.0);
 
     for(var i = 0; i < attrIndices.length; i = i + 3)
