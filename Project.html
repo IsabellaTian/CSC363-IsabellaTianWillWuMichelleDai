@@ -95,7 +95,7 @@ HTML StartUp:  vertex shader <br>
      gl_Position = projectionMatrix*MatrixAfterTransform*vPosition;
     }
 
-    else (abs(vType-1.0) < 2.0 )
+    else if (abs(vType-1.0) < 2.0 )
     {
      // light1 is the light containing only specular, light2 is the light containing ambient and diffuse
         float shininess = 40.0;
@@ -153,9 +153,13 @@ HTML StartUp:  vertex shader <br>
 
      gl_Position = projectionMatrix*MatrixAfterTransform*vPosition;
     }
+
     else
-    {gl_Position = vPosition;
-     fColor = vColor;}
+    {
+     gl_Position = vPosition;
+     fColor = vColor;
+    }
+
    }
 </script>
 
