@@ -7,7 +7,10 @@ var webgl;
 // "deltaeyedistance(distance from the eye)"
 var theta = 0;
 var thetaLoc;
+var phi = 0;
+var phiLoc;
 var deltatheta = 0.01;
+var deltaphi = 0.01;
 var deltaeyedistance = 0.0;
 
 
@@ -54,9 +57,9 @@ var vertexColors = [
 ];
 
 var vertexPositions = [
-    vec4(0.2, 0.5, 7.0, 1.0),  // cat face
-    vec4(0.2, 0.4, 7.0, 1.0),
-    vec4(0.1, 0.3, 7.0, 1.0)
+    vec4(0.2, 0.7, 0.2, 1.0),  // cat face
+    vec4(0.2, 0.8, 0.3, 1.0),
+    vec4(0.1, 0.7, 0.5, 1.0)
 ];
 
 var attrIndices = [
@@ -71,6 +74,10 @@ window.onload = function init()
         eye = vec3(0.0, 6.0, deltaeyedistance);
     }
     document.getElementById("deltatheta").onchange = function(event){
+        deltatheta = parseFloat(event.target.value);
+    }
+
+    document.getElementById("deltaphi").onchange = function(event){
         deltatheta = parseFloat(event.target.value);
     }
 
@@ -94,10 +101,12 @@ window.onload = function init()
     //sun
     tetrahedron(va, vb, vc, vd, numTimesToSubdivide, vec4( 1.0, 0.5, 0.0, 1.0 ), 1.0);
 
-    for(var i = 0; i < attrIndices.length; i = i + 3)
-    {
-        myTriangle(attrIndices[i], attrIndices[i+1], attrIndices[i+2], 10.0);
-    }
+  //  tetrahedron(va, vb, vc, vd, numTimesToSubdivide, vec4( 1.0, 0.5, 0.0, 1.0 ), 10.0);
+
+ //   for(var i = 0; i < attrIndices.length; i = i + 3)
+ //   {
+ //       myTriangle(attrIndices[i], attrIndices[i+1], attrIndices[i+2], 10.0);
+ //   }
 
     //
     //  Load shaders and initialize attribute buffers
@@ -108,6 +117,7 @@ window.onload = function init()
 
     // get GPU location of uniforms in <program>
     thetaLoc = webgl.getUniformLocation(program,"theta");
+    phiLoc = webgl.getUniformLocation(program,"phi");
     projectionMatrixLoc = webgl.getUniformLocation(program,"projectionMatrix");
     modelViewMatrixLoc = webgl.getUniformLocation(program,"modelViewMatrix");
 
@@ -171,6 +181,9 @@ function render()
     theta = IncrementClamp(theta,deltatheta, 2.0*Math.PI);
     webgl.uniform1f(thetaLoc,theta);
 
+    phi = IncrementClamp(phi, deltaphi, 2.0*Math.PI);
+    webgl.uniform1f(phiLoc, phi);
+
     // compute modelView and projection matrices
     // and them pass along to vertex shader
     modelViewMatrix =  lookAt(eye,at,up);
@@ -226,9 +239,13 @@ function triangle(a, b, c, color, type) {
 
     // normals are vectors
 
-    normalsArray.push(a[0],a[1], a[2], 0.0);
-    normalsArray.push(b[0],b[1], b[2], 0.0);
-    normalsArray.push(c[0],c[1], c[2], 0.0);
+    var t1 = subtract(b,a);
+    var t2 = subtract(c,a);
+    var normal = vec4(normalize(cross(t1,t2)));
+
+    normalsArray.push(normal);
+    normalsArray.push(normal);
+    normalsArray.push(normal);
 
     colorsArray.push(color);
     colorsArray.push(color);
@@ -238,7 +255,6 @@ function triangle(a, b, c, color, type) {
     typesArray.push(type);
     typesArray.push(type);
 
-    index += 3;
 
 }
 
