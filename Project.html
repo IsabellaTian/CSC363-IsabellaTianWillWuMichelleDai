@@ -108,18 +108,21 @@ HTML StartUp:  vertex shader <br>
                          0.0,        1.0, 0.0,        0.0,
                          sin(theta),0.0, cos(theta), 0.0,
                         0.0,        0.0, 0.0,        1.0) *
+
                          // rotating on a farther orbit
                          mat4(1.0, 0.0, 0.0, 0.0,
                          0.0, 1.0, 0.0, 0.0,
                          0.0, 0.0, 1.0, 0.0,
                          3.0, 0.0, 0.0, 1.0)*
+
                          mat4( cos(phi), 0.0, -sin(phi), 0.0,
                          0.0,        1.0, 0.0,        0.0,
                          sin(phi),0.0, cos(phi), 0.0,
                         0.0,        0.0, 0.0,        1.0)*
-                        mat4(0.3, 0.0, 0.0, 0.0,
-                         0.0, 0.3, 0.0, 0.0,
-                         0.0, 0.0, 0.3, 0.0,
+
+                        mat4(0.7, 0.0, 0.0, 0.0,
+                         0.0, 0.7, 0.0, 0.0,
+                         0.0, 0.0, 0.7, 0.0,
                          0.0, 0.0, 0.0, 1.0);
 
      // applying the first light which is the pure specular
