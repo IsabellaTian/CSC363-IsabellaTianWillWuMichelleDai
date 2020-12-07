@@ -103,39 +103,56 @@ HTML StartUp:  vertex shader <br>
 
      mat4 MatrixAfterTransform =
                     modelViewMatrix*
-                    // rotation about y axis (column major order)
-                  mat4( cos(theta), 0.0, -sin(theta), 0.0,
-                         0.0,        1.0, 0.0,        0.0,
-                         sin(theta),0.0, cos(theta), 0.0,
-                        0.0,        0.0, 0.0,        1.0) *
+                  mat4(  cos(theta), 0.0, -sin(theta), 0.0,
+                         0.0,        1.0, 0.0,         0.0,
+                         sin(theta), 0.0, cos(theta),  0.0,
+                         0.0,        0.0, 0.0,         1.0) *
 
-                         // rotating on a farther orbit
-                         mat4(1.0, 0.0, 0.0, 0.0,
+                  mat4(  1.0, 0.0, 0.0, 0.0,
                          0.0, 1.0, 0.0, 0.0,
                          0.0, 0.0, 1.0, 0.0,
                          3.0, 0.0, 0.0, 1.0)*
 
-                         mat4( cos(phi), 0.0, -sin(phi), 0.0,
-                         0.0,        1.0, 0.0,        0.0,
-                         sin(phi),0.0, cos(phi), 0.0,
-                        0.0,        0.0, 0.0,        1.0)*
+                  mat4( cos(phi), 0.0, -sin(phi), 0.0,
+                         0.0,     1.0, 0.0,       0.0,
+                         sin(phi),0.0, cos(phi),  0.0,
+                         0.0,     0.0, 0.0,       1.0)*
 
-                        mat4(0.7, 0.0, 0.0, 0.0,
+                  mat4(  0.7, 0.0, 0.0, 0.0,
                          0.0, 0.7, 0.0, 0.0,
                          0.0, 0.0, 0.7, 0.0,
                          0.0, 0.0, 0.0, 1.0);
 
-     // applying the first light which is the pure specular
      vec3 position = -(MatrixAfterTransform*vPosition).xyz;
+     vec3 L1 = normalize(light1-position);
+
      vec3 E = normalize(-position);
+     vec3 H1 = normalize(L1+E);
+
      vec3 N = normalize((MatrixAfterTransform*vNormal).xyz);
+
+     float specularFactor = pow(max(dot(N,H1), 0.0), shininess);
+     vec4 specular = specularFactor*specularComponent1;
+
+     if(dot(L1,N) < 0.0)  // if parallel or on the other side, specular light will not work
+     {
+       specular = vec4(0.0, 0.0, 0.0, 1.0);
+     }
+
+     fColor = specular*vColor;
+     fColor.a = 1.0;
+
+
+
+     // applying the second light which composed of ambient and diffuse
      vec3 L2 = normalize(light1-position);
+
      vec3 H2 = normalize(L2+E);
 
      float diffuseFactor = max(dot(L2,N), 0.0);
      vec4 diffuse = diffuseFactor*diffuseComponent2;
 
-     fColor = diffuse*vColor;
+     fColor = fColor + (ambientComponent2 + diffuse)*vColor;
      fColor.a = 1.0;
 
      gl_Position = projectionMatrix*MatrixAfterTransform*vPosition;
