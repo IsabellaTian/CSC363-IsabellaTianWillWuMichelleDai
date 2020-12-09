@@ -13,6 +13,14 @@ var deltatheta = 0.01;
 var deltaphi = 0.01;
 var deltaeyedistance = 0.0;
 
+var dspecularXLoc;
+var dspecularYLoc;
+var dspecularZLoc;
+
+var deltaSpecularX = 0.0;
+var deltaSpecularY = 0.0;
+var deltaSpecularZ = 0.0;
+
 
 var va = vec4(0.0, 0.0, -1.0,1);
 var vb = vec4(0.0, 0.942809, 0.333333, 1);
@@ -26,8 +34,6 @@ var vs = vec4(0.816497/3, -0.471405/3, 0.333333/3, 1);
 
 
 var numTimesToSubdivide = 4;
-
-var index = 0;
 
 var positionsArray = [];
 var normalsArray = [];
@@ -50,25 +56,25 @@ var eye = vec3(0.0, 6.0, 6.0);  // eye position
 const at = vec3(0.0, 0.0, 0.0);  //  direction of view
 const up = vec3(0.0, 1.0, 0.0);  // up direction
 
-var vertexColors = [
-    vec4( 1.0, 1.0, 1.0, 1.0 ),
-    vec4( 1.0, 1.0, 1.0, 1.0 ),
-    vec4( 1.0, 1.0, 1.0, 1.0 )
-];
-
-var vertexPositions = [
-    vec4(0.2, 0.7, 0.2, 1.0),  // cat face
-    vec4(0.2, 0.8, 0.3, 1.0),
-    vec4(0.1, 0.7, 0.5, 1.0)
-];
-
-var attrIndices = [
-    0, 1, 2
-];
-
 // define and register callback function to start things off once the html data loads
 window.onload = function init()
 {
+
+    canvas = document.getElementById( "gl-canvas" );
+
+    webgl = WebGLUtils.setupWebGL( canvas );
+    if ( !webgl ) { alert( "WebGL isn't available" ); }
+
+    // set up aspect ratio for frustum
+    aspect = canvas.width / canvas.height;
+
+    webgl.viewport( 0, 0, canvas.width, canvas.height );
+    webgl.clearColor(0.0, 0.0, 0.0, 0.0);
+   // initBkgnd();
+   // tick();
+
+    webgl.enable(webgl.DEPTH_TEST);
+
     document.getElementById("deltaeyedistance").onchange = function(event){
         deltaeyedistance = parseFloat(event.target.value);
         eye = vec3(0.0, 6.0, deltaeyedistance);
@@ -81,19 +87,17 @@ window.onload = function init()
         deltatheta = parseFloat(event.target.value);
     }
 
-    canvas = document.getElementById( "gl-canvas" );
+    document.getElementById("deltaSpecularX").onchange = function(event){
+        deltaSpecularX = parseFloat(event.target.value);
+    }
 
-    webgl = WebGLUtils.setupWebGL( canvas );
-    if ( !webgl ) { alert( "WebGL isn't available" ); }
+    document.getElementById("deltaSpecularY").onchange = function(event){
+        deltaSpecularY = parseFloat(event.target.value);
+    }
 
-    // set up aspect ratio for frustum
-    aspect = canvas.width / canvas.height;
-
-    webgl.viewport( 0, 0, canvas.width, canvas.height );
-    webgl.clearColor( 0.0, 0.0, 0.0, 1.0 );
-
-    // enable hidden surface removal (by default uses LESS)
-    webgl.enable(webgl.DEPTH_TEST);
+    document.getElementById("deltaSpecularZ").onchange = function(event){
+        deltaSpecularZ = parseFloat(event.target.value);
+    }
 
     // creating triangles
     //earth
@@ -101,17 +105,6 @@ window.onload = function init()
     //sun
     tetrahedron(va, vb, vc, vd, numTimesToSubdivide, vec4( 1.0, 0.5, 0.0, 1.0 ), vec4( 1.0, 0.5, 0.0, 1.0 ),  vec4( 1.0, 0.5, 0.0, 1.0 ), 1.0);
 
-  //  tetrahedron(va, vb, vc, vd, numTimesToSubdivide, vec4( 1.0, 0.5, 0.0, 1.0 ), 10.0);
-
- //   for(var i = 0; i < attrIndices.length; i = i + 3)
- //   {
- //       myTriangle(attrIndices[i], attrIndices[i+1], attrIndices[i+2], 10.0);
- //   }
-
-    //
-    //  Load shaders and initialize attribute buffers
-    //  Set webgl context to "program"
-    //
     var program = initShaders( webgl, "vertex-shader", "fragment-shader" );
     webgl.useProgram( program );
 
@@ -120,6 +113,9 @@ window.onload = function init()
     phiLoc = webgl.getUniformLocation(program,"phi");
     projectionMatrixLoc = webgl.getUniformLocation(program,"projectionMatrix");
     modelViewMatrixLoc = webgl.getUniformLocation(program,"modelViewMatrix");
+    dspecularXLoc = webgl.getUniformLocation(program, "deltaSpecularX");
+    dspecularYLoc = webgl.getUniformLocation(program, "deltaSpecularY");
+    dspecularZLoc = webgl.getUniformLocation(program, "deltaSpecularZ");
 
     var cBuffer = webgl.createBuffer();
     webgl.bindBuffer( webgl.ARRAY_BUFFER, cBuffer );
@@ -183,6 +179,11 @@ function render()
 
     phi = IncrementClamp(phi, deltaphi, 2.0*Math.PI);
     webgl.uniform1f(phiLoc, phi);
+
+    webgl.uniform1f(dspecularXLoc, deltaSpecularX);
+    webgl.uniform1f(dspecularYLoc, deltaSpecularY);
+    webgl.uniform1f(dspecularZLoc, deltaSpecularZ);
+
 
     // compute modelView and projection matrices
     // and them pass along to vertex shader
@@ -298,3 +299,31 @@ function IncrementClamp(x, dx, upper){
     }
     return newX;
 }
+
+/*
+function tick() {
+    requestAnimFrame(tick);
+    drawScene();
+    initBkgnd();
+    animate();
+}
+
+function initBkgnd() {
+    var backTex = webgl.createTexture();
+    backTex.Img = new Image();
+    backTex.Img.onload = function() {
+        handleBkTex(backTex);
+    }
+    backTex.Img.src = "https://image.freepik.com/free-vector/space-with-stars-universe-space-infinity-background_78474-99.jpg";
+}
+
+function handleBkTex(tex) {
+    webgl.bindTexture(webgl.TEXTURE_2D, tex);
+    webgl.pixelStorei(webgl.UNPACK_FLIP_Y_WEBGL, true);
+    webgl.texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, tex.Img);
+    webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.NEAREST);
+    webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.NEAREST);
+    webgl.bindTexture(webgl.TEXTURE_2D, null);
+}
+
+*/

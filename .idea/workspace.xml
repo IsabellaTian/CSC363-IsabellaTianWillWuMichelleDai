@@ -19,9 +19,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fa74484-779a-4738-addb-4db305756c32" name="Default Changelist" comment="Color change Michelle">
+    <list default="true" id="2fa74484-779a-4738-addb-4db305756c32" name="Default Changelist" comment="Rotation Michelle">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.html" beforeDir="false" afterPath="$PROJECT_DIR$/Project.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project.js" beforeDir="false" afterPath="$PROJECT_DIR$/Project.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +77,9 @@
       <workItem from="1607265666590" duration="24000" />
       <workItem from="1607265817926" duration="2384000" />
       <workItem from="1607296393397" duration="1904000" />
-      <workItem from="1607363577243" duration="272000" />
+      <workItem from="1607363577243" duration="484000" />
+      <workItem from="1607364326229" duration="1155000" />
+      <workItem from="1607551730160" duration="3818000" />
     </task>
     <task id="LOCAL-00001" summary="Fifth Commit Michelle">
       <created>1606927443550</created>
@@ -141,7 +144,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607267060479</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Rotation Michelle">
+      <created>1607364049631</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1607364049631</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -165,6 +175,7 @@
     <MESSAGE value="Background Michelle" />
     <MESSAGE value="After meeting Michelle" />
     <MESSAGE value="Color change Michelle" />
-    <option name="LAST_COMMIT_MESSAGE" value="Color change Michelle" />
+    <MESSAGE value="Rotation Michelle" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rotation Michelle" />
   </component>
 </project>
