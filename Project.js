@@ -27,12 +27,6 @@ var vb = vec4(0.0, 0.942809, 0.333333, 1);
 var vc = vec4(-0.816497, -0.471405, 0.333333, 1);
 var vd = vec4(0.816497, -0.471405, 0.333333,1);
 
-var vm = vec4(0.0, 0.0, -0.5, 1);
-var vn = vec4(0.0, 0.942809/3, 0.333333/3, 1);
-var vl = vec4(-0.816497/3, -0.471405/3, 0.333333/3, 1);
-var vs = vec4(0.816497/3, -0.471405/3, 0.333333/3, 1);
-
-
 var numTimesToSubdivide = 4;
 
 var positionsArray = [];
@@ -70,8 +64,6 @@ window.onload = function init()
 
     webgl.viewport( 0, 0, canvas.width, canvas.height );
     webgl.clearColor(0.0, 0.0, 0.0, 0.0);
-   // initBkgnd();
-   // tick();
 
     webgl.enable(webgl.DEPTH_TEST);
 
@@ -299,31 +291,3 @@ function IncrementClamp(x, dx, upper){
     }
     return newX;
 }
-
-/*
-function tick() {
-    requestAnimFrame(tick);
-    drawScene();
-    initBkgnd();
-    animate();
-}
-
-function initBkgnd() {
-    var backTex = webgl.createTexture();
-    backTex.Img = new Image();
-    backTex.Img.onload = function() {
-        handleBkTex(backTex);
-    }
-    backTex.Img.src = "https://image.freepik.com/free-vector/space-with-stars-universe-space-infinity-background_78474-99.jpg";
-}
-
-function handleBkTex(tex) {
-    webgl.bindTexture(webgl.TEXTURE_2D, tex);
-    webgl.pixelStorei(webgl.UNPACK_FLIP_Y_WEBGL, true);
-    webgl.texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, tex.Img);
-    webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.NEAREST);
-    webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.NEAREST);
-    webgl.bindTexture(webgl.TEXTURE_2D, null);
-}
-
-*/
