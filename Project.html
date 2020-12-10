@@ -13,46 +13,46 @@ HTML StartUp:  vertex shader <br>
 <script id="vertex-shader" type="x-shader/x-vertex">
     // VERTEX SHADER
     // This is called and applied to every vertex. The vertex
-    // in this shader has two "attributes", a position (vPosition),
-    // a color (vColor),
+    // in this shader has four "attributes", a position (vPosition),
+    // a normal (vNormal), a color (vColor), a type (vType),
     attribute vec4 vPosition;
     attribute vec4 vNormal;
     attribute vec4 vColor;
     attribute float vType;
 
-    // uniforms for angle of rotation (theta), model view (modelViewMatrix),
-    // and perspective projection (projectionMatrix), as well as the orbit (distance)
-    // uniforms for x, y, z coordinate of the specular light
+    // uniforms for angle of rotation (theta & phi for orbital and self), model view (modelViewMatrix),
+    // and perspective projection (projectionMatrix)
     uniform float theta;
     uniform float phi;
     uniform mat4 modelViewMatrix;
     uniform mat4 projectionMatrix;
-    uniform float deltaSpecularX;
-    uniform float deltaSpecularY;
-    uniform float deltaSpecularZ;
+
+    // pass in random size, distance, and colors for new planet
+    uniform float randomSize;
+    uniform float randomDistance;
+    uniform vec4 randomColor1;
+    uniform vec4 randomColor2;
+    uniform vec4 randomColor3;
 
     // boring varying
     varying vec4 fColor;
 
+// Michelle: FIXME I think light with ambient, specular, and diffuse looks the best
+// lights are originated at the center to simulate the light from sun
     void main()
     {
+
+    // type for sun
      if(abs(vType-1.0) < 0.1)
      {
         float shininess = 100.0;
-        vec3 light1 = vec3(deltaSpecularX, deltaSpecularY, deltaSpecularZ);
-        vec3 light2 = vec3(0.0, 0.0, 0.0);
+        vec3 light = vec3(0.0, 0.0, 0.0);
 
-        vec4 ambientComponent2 = vec4(0.2, 0.2, 0.2, 1.0);
         vec4 diffuseComponent2 = vec4(1.0, 1.0, 1.0, 1.0);
         vec4 specularComponent1 = vec4(1.0, 1.0, 1.0, 1.0);
 
      mat4 MatrixAfterTransform =
                     modelViewMatrix*
-               mat4( 1.0, 0.0, 0.0, 0.0,
-                        0.0,        1.0, 0.0,        0.0,
-                         0.0,0.0, 1.0, 0.0,
-                         0.0,        0.0, 0.0,        1.0) *
-                         // rotating on a farther orbit
                          mat4(1.0, 0.0, 0.0, 0.0,
                          0.0, 1.0, 0.0, 0.0,
                          0.0, 0.0, 1.0, 0.0,
@@ -60,7 +60,7 @@ HTML StartUp:  vertex shader <br>
 
      // applying the first light which is the pure specular
      vec3 position = -(MatrixAfterTransform*vPosition).xyz;
-     vec3 L1 = normalize(light1-position);
+     vec3 L1 = normalize(light-position);
 
      vec3 E = normalize(-position);
      vec3 H1 = normalize(L1+E);
@@ -78,57 +78,58 @@ HTML StartUp:  vertex shader <br>
      fColor = specular*vColor;
      fColor.a = 1.0;
 
-
-
      // applying the second light which composed of ambient and diffuse
-     vec3 L2 = normalize(light1-position);
+     vec3 L2 = normalize(light-position);
 
      vec3 H2 = normalize(L2+E);
 
      float diffuseFactor = max(dot(L2,N), 0.0);
      vec4 diffuse = diffuseFactor*diffuseComponent2;
 
-     fColor = fColor + (ambientComponent2 + diffuse)*vColor;
+     fColor = fColor + diffuse*vColor;
      fColor.a = 1.0;
 
      gl_Position = projectionMatrix*MatrixAfterTransform*vPosition;
     }
 
+// type for earth
     else if (abs(vType-2.0) < 0.1 )
     {
      // light1 is the light containing only specular, light2 is the light containing ambient and diffuse
         float shininess = 40.0;
-        vec3 light1 = vec3(deltaSpecularX, deltaSpecularY, deltaSpecularZ);
-        vec3 light2 = vec3(0.0, 0.0, 0.0);
+        vec3 light = vec3(0.0, 0.0, 0.0);
 
-        vec4 ambientComponent2 = vec4(0.8, 0.5, 0.5, 1.0);
         vec4 diffuseComponent2 = vec4(0.8, 0.8, 0.8, 1.0);
         vec4 specularComponent1 = vec4(0.8, 0.5, 0.5, 1.0);
 
      mat4 MatrixAfterTransform =
                     modelViewMatrix*
+                    // orbital rotation
                   mat4(  cos(theta), 0.0, -sin(theta), 0.0,
                          0.0,        1.0, 0.0,         0.0,
                          sin(theta), 0.0, cos(theta),  0.0,
                          0.0,        0.0, 0.0,         1.0) *
 
+                    // translate to a farther distance
                   mat4(  1.0, 0.0, 0.0, 0.0,
                          0.0, 1.0, 0.0, 0.0,
                          0.0, 0.0, 1.0, 0.0,
                          3.0, 0.0, 0.0, 1.0)*
 
+                     // self orbit
                   mat4( cos(phi), 0.0, -sin(phi), 0.0,
                          0.0,     1.0, 0.0,       0.0,
                          sin(phi),0.0, cos(phi),  0.0,
                          0.0,     0.0, 0.0,       1.0)*
 
+                    // resize the earth
                   mat4(  0.7, 0.0, 0.0, 0.0,
                          0.0, 0.7, 0.0, 0.0,
                          0.0, 0.0, 0.7, 0.0,
                          0.0, 0.0, 0.0, 1.0);
 
      vec3 position = -(MatrixAfterTransform*vPosition).xyz;
-     vec3 L1 = normalize(light1-position);
+     vec3 L1 = normalize(light-position);
 
      vec3 E = normalize(-position);
      vec3 H1 = normalize(L1+E);
@@ -147,16 +148,83 @@ HTML StartUp:  vertex shader <br>
      fColor.a = 1.0;
 
 
-
      // applying the second light which composed of ambient and diffuse
-     vec3 L2 = normalize(light2-position);
+     vec3 L2 = normalize(light-position);
 
      vec3 H2 = normalize(L2+E);
 
      float diffuseFactor = max(dot(L2,N), 0.0);
      vec4 diffuse = diffuseFactor*diffuseComponent2;
 
-     fColor = fColor + (ambientComponent2 + diffuse)*vColor;
+     fColor = fColor + diffuse*vColor;
+     fColor.a = 1.0;
+
+     gl_Position = projectionMatrix*MatrixAfterTransform*vPosition;
+    }
+
+// type for new planet
+        else if (abs(vType-3.0) < 0.1 )
+    {
+        float shininess = 40.0;
+        vec3 light = vec3(0.0, 0.0, 0.0);
+
+        vec4 diffuseComponent2 = vec4(0.8, 0.8, 0.8, 1.0);
+        vec4 specularComponent1 = vec4(0.8, 0.5, 0.5, 1.0);
+
+     mat4 MatrixAfterTransform =
+                    modelViewMatrix*
+                    // orbital rotation
+                  mat4(  cos(theta), 0.0, -sin(theta), 0.0,
+                         0.0,        1.0, 0.0,         0.0,
+                         sin(theta), 0.0, cos(theta),  0.0,
+                         0.0,        0.0, 0.0,         1.0) *
+
+                // translate to a farther distance
+                  mat4(  1.0, 0.0, 0.0, 0.0,
+                         0.0, 1.0, 0.0, 0.0,
+                         0.0, 0.0, 1.0, 0.0,
+                         randomDistance, 0.0, 0.0, 1.0)*
+
+                // self orbit
+                  mat4( cos(phi), 0.0, -sin(phi), 0.0,
+                         0.0,     1.0, 0.0,       0.0,
+                         sin(phi),0.0, cos(phi),  0.0,
+                         0.0,     0.0, 0.0,       1.0)*
+
+                    // resize the earth
+                  mat4(  randomSize, 0.0, 0.0, 0.0,
+                         0.0, randomSize, 0.0, 0.0,
+                         0.0, 0.0, randomSize, 0.0,
+                         0.0, 0.0, 0.0, 1.0);
+
+     vec3 position = -(MatrixAfterTransform*vPosition).xyz;
+     vec3 L1 = normalize(light-position);
+
+     vec3 E = normalize(-position);
+     vec3 H1 = normalize(L1+E);
+
+     vec3 N = normalize((MatrixAfterTransform*vNormal).xyz);
+
+     float specularFactor = pow(max(dot(N,H1), 0.0), shininess);
+     vec4 specular = specularFactor*specularComponent1;
+
+     if(dot(L1,N) < 0.0)  // if parallel or on the other side, specular light will not work
+     {
+       specular = vec4(0.0, 0.0, 0.0, 1.0);
+     }
+
+     fColor = specular*vColor;
+     fColor.a = 1.0;
+
+     // applying the second light which composed of ambient and diffuse
+     vec3 L2 = normalize(light-position);
+
+     vec3 H2 = normalize(L2+E);
+
+     float diffuseFactor = max(dot(L2,N), 0.0);
+     vec4 diffuse = diffuseFactor*diffuseComponent2;
+
+     fColor = fColor + diffuse*vColor;
      fColor.a = 1.0;
 
      gl_Position = projectionMatrix*MatrixAfterTransform*vPosition;
@@ -197,32 +265,24 @@ HTML StartUp:  check for html5 <br>
 <br>
 <br>
 
+<button id = "Button1" class = "rButton">Add a planet</button>
+<br>
+<br>
+
 <label> Distance from eyes </label>
 <input type="range" id="deltaeyedistance" min="6.0" value="6.0" max="10.0" step="0.01"/>
 
 <br>
 <br>
 
-<label> Speed of rotation </label>
+<label> Speed of orbital rotation</label>
 <input type="range" id="deltatheta" min="0.0" value="0.0" max="0.3" step="0.01" />
 
 <br>
 <br>
 
-<label> Speed of rotat </label>
+<label> Speed of self rotation</label>
 <input type="range" id="deltaphi" min="0.0" value="0.0" max="0.3" step="0.01" />
-
-<br>
-<br>
-
-<label> X coordinate of Specular Light</label>
-<input type="range" id="deltaSpecularX" min="-7.0" value="0.0" max="7.0" step="0.01" />
-
-<label> Y coordinate of Specular Light</label>
-<input type="range" id="deltaSpecularY" min="-7.0" value="0.0" max="7.0" step="0.01" />
-
-<label> Z coordinate of Specular Light</label>
-<input type="range" id="deltaSpecularZ" min="-7.0" value="0.0" max="7.0" step="0.01" />
 
 <br>
 <br>

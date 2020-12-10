@@ -21,6 +21,17 @@ var deltaSpecularX = 0.0;
 var deltaSpecularY = 0.0;
 var deltaSpecularZ = 0.0;
 
+// control the new addin planet
+var randomDistance;
+var randomSize;
+var randomColor1;
+var randomColor2;
+var randomColor3;
+var randomSizeLoc;
+var randomDistanceLoc;
+var randomColor1Loc;
+var randomColor2Loc;
+var randomColor3Loc;
 
 var va = vec4(0.0, 0.0, -1.0,1);
 var vb = vec4(0.0, 0.942809, 0.333333, 1);
@@ -34,6 +45,9 @@ var normalsArray = [];
 var colorsArray = [];
 var typesArray = [];
 
+var index=0;
+var indexLoc;
+
 // frustum information
 var near = 4.0;
 var far = 40.0;
@@ -45,10 +59,24 @@ var aspect; // Viewport aspect ratio (setup once canvas is known)
 var modelViewMatrix, projectionMatrix;
 var modelViewMatrixLoc, projectionMatrixLoc;
 
+var cBuffer, vColorLOC, vBuffer, vPositionLOC, tBuffer, vType, nBuffer, vNormalLOC;
+
 // eye information
 var eye = vec3(0.0, 6.0, 6.0);  // eye position
 const at = vec3(0.0, 0.0, 0.0);  //  direction of view
 const up = vec3(0.0, 1.0, 0.0);  // up direction
+
+var colorPalette = [
+    vec4( 0.0, 0.0, 0.0, 1.0 ),  // black
+    vec4( 1.0, 0.0, 0.0, 1.0 ),  // red
+    vec4(1.0, 99.0/255, 71.0/255, 1.0), // tomato
+    vec4( 1.0, 1.0, 0.0, 1.0 ),  // yellow
+    vec4( 0.0, 1.0, 0.0, 1.0 ),  // green
+    vec4( 0.0, 0.0, 1.0, 1.0 ),  // blue
+    vec4( 1.0, 0.0, 1.0, 1.0 ),  // magenta
+    vec4(1,239.0/255,213.0/255,1.0), // papaya whip
+    vec4( 0.0, 1.0, 1.0, 1.0)   // cyan
+];
 
 // define and register callback function to start things off once the html data loads
 window.onload = function init()
@@ -76,22 +104,13 @@ window.onload = function init()
     }
 
     document.getElementById("deltaphi").onchange = function(event){
-        deltatheta = parseFloat(event.target.value);
+        deltaphi = parseFloat(event.target.value);
     }
 
-    document.getElementById("deltaSpecularX").onchange = function(event){
-        deltaSpecularX = parseFloat(event.target.value);
-    }
+    // onclick event trigger
+    // Michelle: FIXME
+    document.getElementById("Button1").onclick = function(event){createNew()};
 
-    document.getElementById("deltaSpecularY").onchange = function(event){
-        deltaSpecularY = parseFloat(event.target.value);
-    }
-
-    document.getElementById("deltaSpecularZ").onchange = function(event){
-        deltaSpecularZ = parseFloat(event.target.value);
-    }
-
-    // creating triangles
     //earth
     tetrahedron(va, vb, vc, vd, numTimesToSubdivide, vec4(0.0, 0.0, 1.0, 1.0), vec4( 0.0, 0.0, 1.0, 1.0 ), vec4( 0.0, 1.0, 0.0, 1.0 ), 2.0);
     //sun
@@ -102,51 +121,46 @@ window.onload = function init()
 
     // get GPU location of uniforms in <program>
     thetaLoc = webgl.getUniformLocation(program,"theta");
-    phiLoc = webgl.getUniformLocation(program,"phi");
+    phiLoc = webgl.getUniformLocation(program, "phi");
     projectionMatrixLoc = webgl.getUniformLocation(program,"projectionMatrix");
     modelViewMatrixLoc = webgl.getUniformLocation(program,"modelViewMatrix");
-    dspecularXLoc = webgl.getUniformLocation(program, "deltaSpecularX");
-    dspecularYLoc = webgl.getUniformLocation(program, "deltaSpecularY");
-    dspecularZLoc = webgl.getUniformLocation(program, "deltaSpecularZ");
 
-    var cBuffer = webgl.createBuffer();
+    randomDistanceLoc = webgl.getUniformLocation(program, "randomDistance");
+    randomSizeLoc = webgl.getUniformLocation(program, "randomSize");
+    randomColor1Loc = webgl.getUniformLocation(program, "randomColor1");
+    randomColor2Loc = webgl.getUniformLocation(program, "randomColor2");
+    randomColor3Loc = webgl.getUniformLocation(program, "randomColor3");
+
+    cBuffer = webgl.createBuffer();
     webgl.bindBuffer( webgl.ARRAY_BUFFER, cBuffer );
     webgl.bufferData( webgl.ARRAY_BUFFER, flatten(colorsArray), webgl.STATIC_DRAW );
 
-    var vColorLOC = webgl.getAttribLocation( program, "vColor" );
+    vColorLOC = webgl.getAttribLocation( program, "vColor" );
     webgl.vertexAttribPointer( vColorLOC, 4, webgl.FLOAT, false, 0, 0 );
     webgl.enableVertexAttribArray( vColorLOC );
 
-    // vertex array attribute buffer (indexed by iBuffer)
-    //      4 floats corresponding to homogeneous vertex coordinates
-
-    var vBuffer = webgl.createBuffer();
+    vBuffer = webgl.createBuffer();
     webgl.bindBuffer( webgl.ARRAY_BUFFER, vBuffer );
-    //webgl.bufferData( webgl.ARRAY_BUFFER, flatten(vertexPositions), webgl.STATIC_DRAW );
     webgl.bufferData( webgl.ARRAY_BUFFER, flatten(positionsArray), webgl.STATIC_DRAW );
 
-    var vPositionLOC = webgl.getAttribLocation( program, "vPosition" );
+    vPositionLOC = webgl.getAttribLocation( program, "vPosition" );
     webgl.vertexAttribPointer( vPositionLOC, 4, webgl.FLOAT, false, 0, 0 );
     webgl.enableVertexAttribArray( vPositionLOC );
 
-    var tBuffer = webgl.createBuffer();
+    tBuffer = webgl.createBuffer();
     webgl.bindBuffer(webgl.ARRAY_BUFFER, tBuffer);
     webgl.bufferData(webgl.ARRAY_BUFFER, flatten(typesArray), webgl.STATIC_DRAW);
 
-    // associate JavaScript vType with vertex shader attribute "vType"
-    var vType = webgl.getAttribLocation( program, "vType");
+    vType = webgl.getAttribLocation( program, "vType");
     webgl.vertexAttribPointer(vType, 1, webgl.FLOAT, false, 0, 0);
     webgl.enableVertexAttribArray(vType);
 
-
-    // normals buffer
-
-    var nBuffer = webgl.createBuffer();
+    nBuffer = webgl.createBuffer();
     webgl.bindBuffer( webgl.ARRAY_BUFFER, nBuffer );
     //webgl.bufferData( webgl.ARRAY_BUFFER, flatten(vertexPositions), webgl.STATIC_DRAW );
     webgl.bufferData( webgl.ARRAY_BUFFER, flatten(normalsArray), webgl.STATIC_DRAW );
 
-    var vNormalLOC = webgl.getAttribLocation( program, "vNormal" );
+    vNormalLOC = webgl.getAttribLocation( program, "vNormal" );
     webgl.vertexAttribPointer( vNormalLOC, 4, webgl.FLOAT, false, 0, 0 );
     webgl.enableVertexAttribArray( vNormalLOC );
 
@@ -161,6 +175,7 @@ window.onload = function init()
 // with the screen refresh
 function render()
 {
+    updateBuffer();
     // clear the color buffer and the depth buffer
     webgl.clear( webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT);
 
@@ -176,6 +191,11 @@ function render()
     webgl.uniform1f(dspecularYLoc, deltaSpecularY);
     webgl.uniform1f(dspecularZLoc, deltaSpecularZ);
 
+    webgl.uniform1f(randomSizeLoc, randomSize);
+    webgl.uniform1f(randomDistanceLoc, randomDistance);
+    webgl.uniform1f(randomColor1Loc, randomColor1);
+    webgl.uniform1f(randomColor2Loc, randomColor2);
+    webgl.uniform1f(randomColor3Loc, randomColor3);
 
     // compute modelView and projection matrices
     // and them pass along to vertex shader
@@ -186,43 +206,9 @@ function render()
     webgl.uniformMatrix4fv( projectionMatrixLoc, false,
         flatten(projectionMatrix) );
 
-    // drawElements draws the "elements" (based on indices)
-    //webgl.drawElements( webgl.TRIANGLES, attrIndices.length,
-    //    webgl.UNSIGNED_BYTE, 0 );
     webgl.drawArrays(webgl.TRIANGLES, 0, positionsArray.length);
 
     requestAnimFrame( render );
-}
-
-function myTriangle(iA, iB, iC, type)
-{
-    var A = vertexPositions[iA];
-    var B = vertexPositions[iB];
-    var C = vertexPositions[iC];
-
-    var Ac = vertexColors[iA];
-    var Bc = vertexColors[iB];
-    var Cc = vertexColors[iC];
-
-    positionsArray.push(A);
-    positionsArray.push(B);
-    positionsArray.push(C);
-
-    colorsArray.push(Ac);
-    colorsArray.push(Bc);
-    colorsArray.push(Cc);
-
-    var t1 = subtract(B,A);
-    var t2 = subtract(C,A);
-    var normal = vec4(normalize(cross(t1,t2)));
-
-    normalsArray.push(normal);
-    normalsArray.push(normal);
-    normalsArray.push(normal);
-
-    typesArray.push(type);
-    typesArray.push(type);
-    typesArray.push(type);
 }
 
 function triangle(a, b, c, color1, color2, color3, type) {
@@ -250,7 +236,6 @@ function triangle(a, b, c, color1, color2, color3, type) {
 
 
 }
-
 
 function divideTriangle(a, b, c, count, color1, color2, color3, type) {
     if ( count > 0 ) {
@@ -290,4 +275,53 @@ function IncrementClamp(x, dx, upper){
         return newX-upper;
     }
     return newX;
+}
+
+// when new planet is added, push in new buffers
+// Michelle: FIXME maybe we can update our positionsArray, typesArray, colorsArray, and TypesArray when new planet is added.
+function updateBuffer()
+{
+    cBuffer = webgl.createBuffer();
+    webgl.bindBuffer( webgl.ARRAY_BUFFER, cBuffer );
+    webgl.bufferData( webgl.ARRAY_BUFFER, flatten(colorsArray), webgl.STATIC_DRAW );
+    webgl.vertexAttribPointer( vColorLOC, 4, webgl.FLOAT, false, 0, 0 );
+
+    vBuffer = webgl.createBuffer();
+    webgl.bindBuffer( webgl.ARRAY_BUFFER, vBuffer );
+    webgl.bufferData( webgl.ARRAY_BUFFER, flatten(positionsArray), webgl.STATIC_DRAW );
+    webgl.vertexAttribPointer( vPositionLOC, 4, webgl.FLOAT, false, 0, 0 );
+
+    tBuffer = webgl.createBuffer();
+    webgl.bindBuffer(webgl.ARRAY_BUFFER, tBuffer);
+    webgl.bufferData(webgl.ARRAY_BUFFER, flatten(typesArray), webgl.STATIC_DRAW);
+    webgl.vertexAttribPointer(vType, 1, webgl.FLOAT, false, 0, 0);
+
+    nBuffer = webgl.createBuffer();
+    webgl.bindBuffer( webgl.ARRAY_BUFFER, nBuffer );
+    webgl.bufferData( webgl.ARRAY_BUFFER, flatten(normalsArray), webgl.STATIC_DRAW );
+    webgl.vertexAttribPointer( vNormalLOC, 4, webgl.FLOAT, false, 0, 0 );
+}
+
+// create new planet if onclick is triggered
+// Michelle: FIXME pass in array, problem: data overwrite
+function createNew()
+{
+    randomDistance = getRandomIntInclusive(2.0, 5.0);
+
+    randomSize = (getRandomIntInclusive(1.0, 10.0)/10.0);
+
+    randomColor1 = colorPalette[getRandomIntInclusive(0.0, 8.0)];
+
+    randomColor2 = colorPalette[getRandomIntInclusive(0.0, 8.0)];
+
+    randomColor3 = colorPalette[getRandomIntInclusive(0.0, 8.0)];
+
+    return tetrahedron(va, vb, vc, vd, numTimesToSubdivide, randomColor1, randomColor2, randomColor3, 3.0);
+
+}
+
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
 }
